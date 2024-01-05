@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FinderCityWeather</string>
+    <string name="enter_city">Ingrese la ciudad</string>
+</resources>

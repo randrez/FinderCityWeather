@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.randrez.finderCityWeather.presentation.main.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        tools:context="com.randrez.finderCityWeatherApp.presentation.main.MainActivity">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.mapbox.mapboxsdk.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include
+                android:id="@+id/viewSearchCityName"
+                layout="@layout/frame_search_by_city_layout"
+                android:visibility="visible"
+                app:showTypeSearch="@{viewModel.changeSearchLatLng}"
+                app:viewModel="@{viewModel}" />
+
+            <include
+                android:id="@+id/viewSearchLatLng"
+                layout="@layout/frame_search_by_lat_lng_layout"
+                android:visibility="gone"
+                app:showTypeSearch="@{viewModel.changeSearchLatLng}"
+                app:viewModel="@{viewModel}" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/changeSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="10dp"
+                android:contentDescription="TODO"
+                app:fabClick="@{viewModel}"
+                app:fabColor="@{viewModel.fbButtonState.colorButton}"
+                app:fabIcon="@{viewModel.fbButtonState.iconButton}"
+                app:tint="@color/white" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
