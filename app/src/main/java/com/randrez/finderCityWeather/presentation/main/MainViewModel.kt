@@ -4,13 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.viewModelScope
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.randrez.finderCityWeather.domain.resource.Resource
+import com.randrez.finderCityWeather.domain.useCase.WeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-
+    private val weatherUseCase: WeatherUseCase
 ) : ViewModel() {
 
     private val _fbButtonState: MutableLiveData<FbButtonState> =
@@ -46,15 +50,31 @@ class MainViewModel @Inject constructor(
 
             is MainEventsUI.OnEnterCityName -> {
                 _cityName.value = eventsUI.cityName
-                _latitudeLongitude.value = LatLng(4.60971, -74.08175)
+                getWeatherInfoByCityName(eventsUI.cityName)
             }
 
             is MainEventsUI.OnClearTextCityName -> {
                 _cityName.value = ""
-                _latitudeLongitude.value = LatLng(0.0, 0.0)
             }
 
             else -> {}
+        }
+    }
+
+    private fun getWeatherInfoByCityName(cityName: String) {
+        viewModelScope.launch {
+            when (val result = weatherUseCase.getWeatherByCityName.invoke(cityName)) {
+                is Resource.Error -> {
+
+                }
+
+                is Resource.Success -> {
+                    result.data?.let { weatherInfo ->
+                        _latitudeLongitude.value =
+                            LatLng(weatherInfo.latitude, weatherInfo.longitude)
+                    }
+                }
+            }
         }
     }
 }

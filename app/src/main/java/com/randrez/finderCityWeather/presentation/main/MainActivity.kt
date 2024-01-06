@@ -17,7 +17,6 @@ import com.randrez.finderCityWeather.databinding.ActivityMainBinding
 import com.randrez.finderCityWeather.utils.hideKeyboard
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 

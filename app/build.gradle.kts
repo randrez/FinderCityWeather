@@ -30,12 +30,16 @@ android {
         buildConfigField(
             type = "String",
             name = "URL_PUBLIC",
-            value = "\"https://api.openweathermap.org/data/2.5/weather?\""
+            value = "\"https://api.openweathermap.org/data/2.5/\""
         )
         buildConfigField(
             type = "String",
             name = "STYLE_MAP",
             value = "\"https://api.maptiler.com/maps/streets-v2/style.json?key=NAwBlYu2esuWjIflgJXa\""
+        )
+        buildConfigField(
+            type = "String", name = "API_KEY",
+            value = "\"c7c0aca9543463275ddd29a7779fa576\""
         )
     }
 
