@@ -1,5 +1,6 @@
 package com.randrez.finderCityWeather.domain.mapper
 
+import com.randrez.database.entities.WeatherInfoEntity
 import com.randrez.finderCityWeather.data.remote.models.WeatherInfoDTO
 import com.randrez.finderCityWeather.domain.models.WeatherInfo
 import com.randrez.finderCityWeather.utils.kelvinToCelsius
@@ -19,4 +20,32 @@ fun WeatherInfoDTO.toWeatherInfo() =
         id = this.id?.toLong() ?: 0
     )
 
+fun WeatherInfo.toWeatherInfoEntity(): WeatherInfoEntity =
+    WeatherInfoEntity(
+        id = id,
+        cityName = cityName,
+        latitude = latitude,
+        longitude = longitude,
+        countryCode = countryCode,
+        temp = temp,
+        clouds = clouds,
+        humidity = humidity,
+        pressure = pressure,
+        windDirection = windDirection,
+        windSpeed = windSpeed
+    )
 
+fun WeatherInfoEntity.toWeatherInfo(): WeatherInfo =
+    WeatherInfo(
+        latitude = latitude,
+        longitude = longitude,
+        countryCode = countryCode,
+        temp = temp,
+        clouds = clouds,
+        humidity = humidity,
+        pressure = pressure,
+        windDirection = windDirection,
+        windSpeed = windSpeed,
+        cityName = cityName,
+        id = id
+    )

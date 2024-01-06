@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.randrez.finderCityWeather.presentation.main.MainViewModel" />
@@ -15,6 +16,7 @@
         android:layout_height="match_parent"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        app:blockLayout="@{viewModel.progress}"
         tools:context="com.randrez.finderCityWeatherApp.presentation.main.MainActivity">
 
         <FrameLayout
@@ -51,6 +53,21 @@
                 app:fabColor="@{viewModel.fbButtonState.colorButton}"
                 app:fabIcon="@{viewModel.fbButtonState.iconButton}"
                 app:tint="@color/white" />
+
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="5dp"
+                android:background="@drawable/oval_layout"
+                app:showProgress="@{viewModel.progress}">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" />
+            </FrameLayout>
 
         </FrameLayout>
 

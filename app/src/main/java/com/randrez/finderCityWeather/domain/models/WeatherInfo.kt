@@ -10,6 +10,6 @@ data class WeatherInfo (
     val pressure:Long,
     val windDirection:Long,
     val windSpeed:Double,
-    val cityName:String,
+    var cityName:String,
     val id:Long
 )

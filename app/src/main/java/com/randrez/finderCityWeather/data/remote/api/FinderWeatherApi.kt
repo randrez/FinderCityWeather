@@ -8,4 +8,10 @@ interface FinderWeatherApi {
 
     @GET("weather")
     suspend fun getWeatherByCityName(@Query("q") cityName: String): WeatherInfoDTO
+
+    @GET("weather")
+    suspend fun getWeatherByLatLng(
+        @Query("lat") latitude: Double?,
+        @Query("lon") longitude: Double?
+    ): WeatherInfoDTO
 }

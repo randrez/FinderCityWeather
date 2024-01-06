@@ -4,10 +4,18 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.randrez.database.dao.WeatherInfoDAO
+import com.randrez.database.entities.WeatherInfoEntity
 
 
-//@Database(entities = {}, version = 1, exportSchema = false)
+@Database(
+    entities = [WeatherInfoEntity::class],
+    version = BuildConfig.DATABASE_VERSION,
+    exportSchema = false
+)
 abstract class AppDataBase : RoomDatabase() {
+
+    abstract fun weatherInfoDao(): WeatherInfoDAO
 
     companion object {
         @Volatile
@@ -18,7 +26,7 @@ abstract class AppDataBase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context = context,
                     klass = AppDataBase::class.java,
-                    name = "rer"
+                    name = BuildConfig.DATABASE_NAME
                 ).build()
                 INSTANCE = instance
                 instance

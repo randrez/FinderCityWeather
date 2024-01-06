@@ -70,7 +70,9 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation("androidx.databinding:databinding-common:8.2.1")
+
     testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.12.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
@@ -82,6 +84,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
@@ -103,8 +106,6 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
 
-    testImplementation("org.mockito:mockito-core:3.12.4")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
-
     implementation("org.maplibre.gl:android-sdk:10.0.2")
+    implementation(project(":database"))
 }

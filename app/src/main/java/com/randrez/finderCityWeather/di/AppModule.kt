@@ -1,9 +1,11 @@
 package com.randrez.finderCityWeather.di
 
+import android.app.Application
 import android.content.Context
-import com.randrez.finderCityWeather.domain.repository.WeatherRepository
-import com.randrez.finderCityWeather.domain.useCase.GetWeatherByCityName
-import com.randrez.finderCityWeather.domain.useCase.WeatherUseCase
+import com.randrez.database.AppDataBase
+import com.randrez.database.repository.WeatherEntitiesRepository
+import com.randrez.database.repository.WeatherEntitiesRepositoryImpl
+import com.randrez.finderCityWeather.domain.useCase.connection.CheckConnection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,14 +19,17 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideWeatherUseCase(
-        @ApplicationContext context: Context,
-        weatherRepository: WeatherRepository
-    ) =
-        WeatherUseCase(
-            getWeatherByCityName = GetWeatherByCityName(
-                context = context,
-                weatherRepository = weatherRepository
-            )
-        )
+    fun provideDatabase(application: Application): AppDataBase {
+        return AppDataBase.getInstance(application.applicationContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCheckConnection(@ApplicationContext context: Context): CheckConnection =
+        CheckConnection(context)
+
+    @Provides
+    @Singleton
+    fun provideWeatherEntitiesRepository(appDataBase: AppDataBase): WeatherEntitiesRepository =
+        WeatherEntitiesRepositoryImpl(weatherInfoDAO = appDataBase.weatherInfoDao())
 }

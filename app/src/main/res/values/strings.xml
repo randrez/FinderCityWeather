@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">FinderCityWeather</string>
     <string name="enter_city">Ingrese la ciudad</string>
+    <string name="country">Country</string>
+    <string name="temp">Temp</string>
+    <string name="clouds">Clouds</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="wind_direction">Wind Direction</string>
+    <string name="wind_speed">Win Speed</string>
+    <string name="close">Cerrar</string>
 </resources>

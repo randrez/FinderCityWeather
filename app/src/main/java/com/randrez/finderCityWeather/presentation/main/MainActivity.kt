@@ -1,8 +1,11 @@
 package com.randrez.finderCityWeather.presentation.main
 
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Window
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -14,7 +17,7 @@ import com.mapbox.mapboxsdk.maps.MapView
 import com.randrez.finderCityWeather.BuildConfig
 import com.randrez.finderCityWeather.R
 import com.randrez.finderCityWeather.databinding.ActivityMainBinding
-import com.randrez.finderCityWeather.utils.hideKeyboard
+import com.randrez.finderCityWeather.domain.models.WeatherInfo
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,9 +38,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.changeSearchLatLng.observe(this) { state ->
             updateFabButton(state)
         }
-        viewModel.latitudeLongitude.observe(this) { latLng ->
-            hideKeyboard(binding.changeSearch)
-            updateMap(latLng)
+        viewModel.weatherInfo.observe(this) { weatherInfo ->
+            weatherInfo?.let {
+                updateMap(weatherInfo = weatherInfo)
+            }
         }
     }
 
@@ -63,18 +67,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateMap(latLng: LatLng) {
+    private fun updateMap(weatherInfo: WeatherInfo) {
         mapView.getMapAsync { mapBoxMap ->
             mapBoxMap.clear()
-            if (latLng.latitude > 0.0) {
-                mapBoxMap.addMarker(MarkerOptions().position(latLng))
+            val latLng = LatLng(
+                weatherInfo.latitude,
+                weatherInfo.longitude
+            )
+            if (weatherInfo.latitude != 0.0 && weatherInfo.longitude != 0.0) {
+                mapBoxMap.addMarker(
+                    MarkerOptions().position(latLng)
+                )
                 mapBoxMap.cameraPosition =
                     CameraPosition.Builder().target(latLng)
                         .zoom(5.0)
                         .build()
                 mapBoxMap.setOnMarkerClickListener { clickedMarker ->
                     if (latLng == clickedMarker.position) {
-                        Toast.makeText(this, clickedMarker.title, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, weatherInfo.cityName, Toast.LENGTH_SHORT).show()
                         true
                     } else
                         false
@@ -86,6 +96,28 @@ class MainActivity : AppCompatActivity() {
                         .build()
             }
         }
+    }
+
+    private fun dialogWeatherInfo(weatherInfo: WeatherInfo){
+        val dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.custom_alert_dialog)
+
+        val body = dialog.findViewById(R.id.body) as TextView
+        body.text = title
+
+        val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
+        yesBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        val noBtn = dialog.findViewById(R.id.noBtn) as Button
+        noBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     override fun onStart() {

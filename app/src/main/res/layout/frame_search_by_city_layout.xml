@@ -27,19 +27,30 @@
                 android:padding="5dp"
                 android:weightSum="2">
 
-                <EditText
+
+                <ImageView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.8"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:padding="5.dp"
+                    android:src="@drawable/baseline_search_24"
+                    app:onClickSearch="@{viewModel}" />
+
+                <EditText
+                    android:id="@+id/edtSearchByCity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.6"
                     android:backgroundTint="@android:color/transparent"
-                    android:drawableStart="@drawable/baseline_search_24"
                     android:hint="@string/enter_city"
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:singleLine="true"
                     android:text="@{viewModel.cityName}"
                     android:textAlignment="center"
-                    app:onTextChangeCity="@{viewModel}" />
+                    app:onActionDone="@{viewModel}"
+                    app:onChangeTextCityName ="@{viewModel}"/>
 
                 <ImageView
                     android:layout_width="0dp"
@@ -48,7 +59,7 @@
                     android:layout_weight="0.2"
                     android:padding="5.dp"
                     android:src="@drawable/baseline_clear_24"
-                    app:onClick="@{viewModel}" />
+                    app:onClickClear="@{viewModel}" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

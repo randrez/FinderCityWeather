@@ -9,15 +9,15 @@ data class WeatherInfoDTO(
     val code: Int?,
     @SerializedName("coord")
     val coordinate: Coordinate?,
-    val dt: Int?,
+    val dt: Int? = null,
     val id: Int?,
     val main: Main?,
     val name: String?,
     @SerializedName("sys")
     val sys: Sys?,
-    val timezone: Int?,
-    val visibility: Int?,
+    val timezone: Int? = null,
+    val visibility: Int? = null,
     val weather: List<Weather?>?,
     val wind: Wind?,
-    val message:String?
+    val message: String? = null
 )

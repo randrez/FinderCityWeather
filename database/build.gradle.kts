@@ -15,6 +15,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         buildConfigField("String", "DATABASE_NAME", "\"database_weather\"")
+        buildConfigField("int", "DATABASE_VERSION", "1")
     }
 
     buildTypes {
