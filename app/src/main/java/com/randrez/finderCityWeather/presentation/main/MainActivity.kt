@@ -3,9 +3,9 @@ package com.randrez.finderCityWeather.presentation.main
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Window
-import android.widget.Toast
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -18,6 +18,12 @@ import com.randrez.finderCityWeather.BuildConfig
 import com.randrez.finderCityWeather.R
 import com.randrez.finderCityWeather.databinding.ActivityMainBinding
 import com.randrez.finderCityWeather.domain.models.WeatherInfo
+import com.randrez.finderCityWeather.utils.toStringClouds
+import com.randrez.finderCityWeather.utils.toStringHumidity
+import com.randrez.finderCityWeather.utils.toStringPressure
+import com.randrez.finderCityWeather.utils.toStringTemp
+import com.randrez.finderCityWeather.utils.toWindDirection
+import com.randrez.finderCityWeather.utils.toWindSpeed
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -84,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                         .build()
                 mapBoxMap.setOnMarkerClickListener { clickedMarker ->
                     if (latLng == clickedMarker.position) {
-                        Toast.makeText(this, weatherInfo.cityName, Toast.LENGTH_SHORT).show()
+                        dialogWeatherInfo(weatherInfo)
                         true
                     } else
                         false
@@ -98,25 +104,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun dialogWeatherInfo(weatherInfo: WeatherInfo){
+    private fun dialogWeatherInfo(weatherInfo: WeatherInfo) {
         val dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.custom_alert_dialog)
 
-        val body = dialog.findViewById(R.id.body) as TextView
-        body.text = title
+        val cityName = dialog.findViewById(R.id.cityName) as TextView
+        cityName.text = weatherInfo.cityName.uppercase()
 
-        val yesBtn = dialog.findViewById(R.id.yesBtn) as Button
-        yesBtn.setOnClickListener {
+        val country = dialog.findViewById(R.id.country) as TextView
+        country.text = weatherInfo.countryCode
+
+        val temp = dialog.findViewById(R.id.temp) as TextView
+        temp.text = weatherInfo.temp.toStringTemp()
+
+        val clouds = dialog.findViewById(R.id.clouds) as TextView
+        clouds.text = weatherInfo.clouds.toStringClouds()
+
+        val humidity = dialog.findViewById(R.id.humidity) as TextView
+        humidity.text = weatherInfo.humidity.toStringHumidity()
+
+        val pressure = dialog.findViewById(R.id.pressure) as TextView
+        pressure.text = weatherInfo.pressure.toStringPressure()
+
+        val windDirection = dialog.findViewById(R.id.windDirection) as TextView
+        windDirection.text = weatherInfo.windDirection.toWindDirection()
+
+        val windSpeed = dialog.findViewById(R.id.winSpeed) as TextView
+        windSpeed.text = weatherInfo.windSpeed.toWindSpeed()
+
+        val btnClose = dialog.findViewById(R.id.closeDilog) as Button
+        btnClose.setOnClickListener {
             dialog.dismiss()
         }
-
-        val noBtn = dialog.findViewById(R.id.noBtn) as Button
-        noBtn.setOnClickListener {
-            dialog.dismiss()
-        }
-
         dialog.show()
     }
 
