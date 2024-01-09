@@ -11,6 +11,7 @@ import org.junit.Test
 
 
 class SaveWeatherInfoInDBTest {
+    
     @MockK
     private lateinit var weatherRepository: WeatherRepository
 
