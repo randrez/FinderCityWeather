@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -47,6 +48,13 @@ class MainActivity : AppCompatActivity() {
         viewModel.weatherInfo.observe(this) { weatherInfo ->
             weatherInfo?.let {
                 updateMap(weatherInfo = weatherInfo)
+            }
+        }
+
+        viewModel.stateError.observe(this) {
+            if (it.showError) {
+                Toast.makeText(this, it.messageError, Toast.LENGTH_SHORT).show()
+                viewModel.clearMessageError()
             }
         }
     }

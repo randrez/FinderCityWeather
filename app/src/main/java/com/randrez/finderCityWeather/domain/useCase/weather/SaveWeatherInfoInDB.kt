@@ -8,14 +8,13 @@ import com.randrez.finderCityWeather.domain.resource.Resource
 class SaveWeatherInfoInDB(
     private val weatherRepository: WeatherRepository
 ) {
-    suspend operator fun invoke(weatherInfo: WeatherInfo): Resource<WeatherInfo> {
+    suspend operator fun invoke(weatherInfo: WeatherInfo?): Resource<WeatherInfo> {
         try {
-            val saveSuccess =
-                weatherRepository.setWeatherInfoLocal(weatherInfo.toWeatherInfoEntity())
-            if (saveSuccess > 0)
-                return Resource.Success(weatherInfo)
-            else
-                return Resource.Error("Exception save information in DB")
+            weatherInfo?.let {
+                val saveSuccess = weatherRepository.setWeatherInfoLocal(it.toWeatherInfoEntity())
+                if (saveSuccess > 0) return Resource.Success(weatherInfo)
+                else return Resource.Error("Exception save information in DB")
+            } ?: return Resource.Error("Exception save information in DB")
         } catch (e: Exception) {
             e.printStackTrace()
             return Resource.Error(e.message ?: "Not found information Weather ")

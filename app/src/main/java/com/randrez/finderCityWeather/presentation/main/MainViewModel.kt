@@ -42,6 +42,9 @@ class MainViewModel @Inject constructor(
     private val _progress = MutableLiveData(false)
     val progress: LiveData<Boolean> = _progress.distinctUntilChanged()
 
+    private val _stateError = MutableLiveData(StateError())
+    val stateError: LiveData<StateError> = _stateError.distinctUntilChanged()
+
     fun updateFabButton(color: Int, icon: Int) {
         _fbButtonState.value = fbButtonState.value?.copy(colorButton = color, iconButton = icon)
     }
@@ -84,7 +87,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun getWeatherInfoByCityName() {
+    fun getWeatherInfoByCityName() {
         _cityName.value?.let { cityName ->
             if (cityName.isNotBlank()) {
                 _progress.value = true
@@ -94,11 +97,15 @@ class MainViewModel @Inject constructor(
                             is Resource.Error -> {
                                 _progress.value = false
                                 _cityName.postValue("")
+                                _stateError.value = stateError.value?.copy(
+                                    showError = true,
+                                    messageError = result.message ?: "Occurred exception"
+                                )
                             }
 
                             is Resource.Success -> {
                                 result.data?.let { weatherInfo ->
-                                    saveWeatherInfo(weatherInfo = weatherInfo)
+                                    saveWeatherInfo(weatherInfo)
                                 }
                             }
                         }
@@ -110,11 +117,37 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun getWeatherInByCityNameInDB(cityName: String) {
+    suspend fun saveWeatherInfo(weatherInfo: WeatherInfo?) {
+        weatherInfo?.cityName = _cityName.value ?: weatherInfo?.cityName ?: ""
+        when (val result =
+            weatherUseCase.saveWeatherInfoInDB.invoke(weatherInfo)) {
+            is Resource.Error -> {
+                _progress.value = false
+                _stateError.value = stateError.value?.copy(
+                    showError = true,
+                    messageError = result.message
+                        ?: "Occurred exception"
+                )
+            }
+
+            is Resource.Success -> {
+                _progress.value = false
+                result.data?.let { weatherInfo ->
+                    _weatherInfo.postValue(weatherInfo)
+                }
+            }
+        }
+    }
+
+    fun getWeatherInByCityNameInDB(cityName: String) {
         viewModelScope.launch {
             when (val result = weatherUseCase.getWeatherByCityNameInDB.invoke(cityName)) {
                 is Resource.Error -> {
                     _progress.value = false
+                    _stateError.value = stateError.value?.copy(
+                        showError = true,
+                        messageError = result.message ?: "Occurred exception"
+                    )
                 }
 
                 is Resource.Success -> {
@@ -127,23 +160,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun saveWeatherInfo(weatherInfo: WeatherInfo) {
-        weatherInfo.cityName = _cityName.value ?: weatherInfo.cityName
-        when (val result = weatherUseCase.saveWeatherInfoInDB.invoke(weatherInfo)) {
-            is Resource.Error -> {
-                _progress.value = false
-            }
-
-            is Resource.Success -> {
-                _progress.value = false
-                result.data?.let { weatherInfo ->
-                    _weatherInfo.postValue(weatherInfo)
-                }
-            }
-        }
-    }
-
-    private fun getWeatherInfoByLatLng() {
+    fun getWeatherInfoByLatLng() {
         _latitude.value?.let { latitude ->
             _longitude.value?.let { longitude ->
                 if (latitude.isNotBlank() && longitude.isNotBlank()) {
@@ -159,11 +176,15 @@ class MainViewModel @Inject constructor(
                                 is Resource.Error -> {
                                     _progress.value = false
                                     _cityName.postValue("")
+                                    _stateError.value = stateError.value?.copy(
+                                        showError = true,
+                                        messageError = result.message ?: "Occurred exception"
+                                    )
                                 }
 
                                 is Resource.Success -> {
                                     result.data?.let { weatherInfo ->
-                                        saveWeatherInfo(weatherInfo = weatherInfo)
+                                        saveWeatherInfo(weatherInfo)
                                     }
                                 }
                             }
@@ -181,11 +202,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun getWeatherInByLatLngInDB(latLng: LatLng) {
+    fun getWeatherInByLatLngInDB(latLng: LatLng) {
         viewModelScope.launch {
             when (val result = weatherUseCase.getWeatherByLatLngInDB.invoke(latLng)) {
                 is Resource.Error -> {
                     _progress.value = false
+                    _stateError.value = stateError.value?.copy(
+                        showError = true,
+                        messageError = result.message ?: "Occurred exception"
+                    )
                 }
 
                 is Resource.Success -> {
@@ -196,6 +221,10 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun clearMessageError() {
+        _stateError.value = stateError.value?.copy(showError = false, messageError = "")
     }
 }
 
